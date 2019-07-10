@@ -1,0 +1,9 @@
+git@github.com:silicon-valley-innovation-center/docker_bases.git
+git@github.com:silicon-valley-innovation-center/fleetmanager-ui.git
+git@github.com:silicon-valley-innovation-center/kong_keycloak.git
+git@github.com:silicon-valley-innovation-center/milestone_demo.git
+git@github.com:silicon-valley-innovation-center/position.git
+git@github.com:silicon-valley-innovation-center/saas.git
+git@github.com:silicon-valley-innovation-center/travis-ci-global-configuration.git
+git@github.com:anvil-open-software/wuf.git
+git@github.com:anvil-open-software/wuf-quick-start.git

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# A script kill the process listening to a port
+#
+# Uasge
+#    killProcessListeingtoPort <port number>
+#
+# Input
+#   port number
+#
+# Output
+#   the process listening to <port numbert> is killed
+#
+GREP_OUTPUT_LOG="grep_output.log"
+currentWordIndex=0
+killed=false
+
+lsof -nP -i4TCP:$1 | grep $1 > $GREP_OUTPUT_LOG
+while read sentence; do
+   for word in $sentence; do
+      if [ $currentWordIndex -eq 1 ]; then
+         kill $word
+         echo "killed: " $word
+         killed=true
+      fi
+      (( currentWordIndex++ ))
+   done
+done < $GREP_OUTPUT_LOG
+if [ $killed = false ]; then
+   echo "No process running on port " $1
+fi
+rm -f $GREP_OUTPUT_LOG

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# A script to add tags named in the local tags.txt file
+#
+# Uasge
+#    run: $ gitTagAddMany
+#
+# Input
+#   $1 the SHA to which to attach the tag
+#
+# Output
+#   Tags added
+#
+ # this does not work, even though the manual version works!
+
+set -ev
+
+echo SHA: $1
+MESSAGE='"Added by gitTagAddMany"'
+
+while read GITTAG
+do
+   if [ $# -eq 0 ]
+     then
+        echo git tag -a $GITTAG -m $MESSAGE
+        git tag -a $GITTAG -m $MESSAGE
+     else
+        echo git tag -a $GITTAG $1 -m $MESSAGE
+        git tag -a $GITTAG $1 -m $MESSAGE
+   fi
+   git push origin $GITTAG
+done < './tags.txt'

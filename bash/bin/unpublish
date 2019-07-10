@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+npm unpublish @anviltech/wuf-web-assets@2.0.0-rc.18.1
+npm unpublish @anviltech/wuf-web-code-sample@2.0.0-rc.1.1
+npm unpublish @anviltech/wuf-web-message@2.0.0-rc.2.1
+npm unpublish @anviltech/wuf-ang-configuration@2.0.0-rc.7.1
+npm unpublish @anviltech/wuf-ang-dashboard@2.0.0-rc.2.1
+npm unpublish @anviltech/wuf-ang-drawer@2.0.0-rc.3.1
+npm unpublish @anviltech/wuf-ang-gridster@2.0.0-rc.1.1
+npm unpublish @anviltech/wuf-ang-layout@2.0.0-rc.9.1
+npm unpublish @anviltech/wuf-ang-login-animated@2.0.0-rc.3.1
+npm unpublish @anviltech/wuf-ang-navigation@2.0.0-rc.8.1
+npm unpublish @anviltech/wuf-ang-smart-table@2.0.0-rc.3.1
+npm unpublish @anviltech/wuf-ang-utils@2.0.0-rc.1.1

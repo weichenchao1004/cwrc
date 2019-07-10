@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# A script to extract the LOC, on a monthly basis, from a list of repositories
+#
+# Uasge
+#    cloc-git <file>
+#
+# Input
+#   $1 - file: a list of the repositories to be scanned, one per line, as
+#   follows
+#      git@github.com:<organization>a/<repository>.git
+#
+# Output
+#   A file, with the LOC counts, as follows:
+#      organization repository date     docLoc srcLoc
+#      string       string     YYYY-MM  number number
+#
+
+repositories=$1
+regex="(git@github.com:)(.*)(/)(.*)(\.)"
+
+TEMP_REPO='temp-linecount-repo'
+GIT_COMMIT_LOG='../gitCommit.log'
+
+# Based on https://www.linuxjournal.com/content/bash-regular-expressions
+echo Organization Repository Date DOC SRC Total> './svicLoc.txt'
+while read repositoryUrl
+do
+   # echo $repositoryUrl
+   if [[ $repositoryUrl =~ $regex ]]; then
+      # echo "$repositoryUrl matches"
+      organization="${BASH_REMATCH[2]}"
+      repository="${BASH_REMATCH[4]}"
+      echo $organization $repository
+
+      # Clone the repository, move into it, and extract the monthly SHA
+      rm -rf $TEMP_REPO || true
+      git clone $repositoryUrl $TEMP_REPO
+      cd $TEMP_REPO
+      getMonthlySHA > '../monthlySha.log'
+      while read monthlyShaLine
+      do
+         # echo $monthlyShaLine
+         sha="$(echo ${monthlyShaLine:0:41})"
+         shaDate="$(echo ${monthlyShaLine:40:8})"
+         echo Processing SHA: $sha/$shaDate
+         cloc "$sha"  > '../clocOutput.log'
+
+         # Extract the LOC for this SHA
+         while read clocLogLine
+         do
+            # echo $clocLogLine
+            testString="$(echo ${clocLogLine:0:3})"
+            # echo Test String: $testString
+            if [ ! -z "$testString" -a "$testString" != " " ];
+            then
+               if [ $testString == 'SUM' ]
+               then
+                  # echo "$clocLogLine"
+                  locDoc="$(echo ${clocLogLine:50:15})"
+                  locSrc="$(echo ${clocLogLine:65:15})"
+                  # echo repo:   $REPO
+                  # echo locDoc: $locDoc
+                  # echo locSrc: $locSrc
+                  totalLoc=$(($locDoc+$locSrc))
+                  echo $organization $repository $shaDate $locDoc $locSrc $totalLoc>> '../svicLoc.txt'
+               fi
+            fi
+         done < '../clocOutput.log'
+      done < '../monthlySha.log'
+      cd ..
+      rm -rf $TEMP_REPO
+   fi
+done < $repositories
